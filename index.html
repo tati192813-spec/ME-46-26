@@ -1,0 +1,1806 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOSSOS D'ESQUADRA</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="window-container">
+      <h1 class="titol-principal">MOSSOS D'ESQUADRA</h1>
+
+      <header class="toolbar">
+        <div class="dropdown-container">
+          <select id="category-select" onchange="resetearSelecciones()">
+            <option value="temari" selected>TEMARI</option>
+            <option value="simulacre">SIMULACRE</option>
+            <option value="estadistiques">ESTADÍSTIQUES</option>
+          </select>
+        </div>
+
+        <nav class="tabs-container" id="tabs-container">
+          <button
+            class="posit-tab tab-bloc-a"
+            data-category="temari"
+            data-target="bloc-a"
+          >
+            Bloc A
+          </button>
+          <button
+            class="posit-tab tab-bloc-b"
+            data-category="temari"
+            data-target="bloc-b"
+          >
+            Bloc B
+          </button>
+          <button
+            class="posit-tab tab-bloc-c"
+            data-category="temari"
+            data-target="bloc-c"
+          >
+            Bloc C
+          </button>
+          <button
+            class="posit-tab tab-idfo"
+            data-category="temari"
+            data-target="idees"
+          >
+            Idees Força
+          </button>
+          <button
+            class="posit-tab tab-exan"
+            data-category="temari"
+            data-target="examens"
+          >
+            Examens Anteriors
+          </button>
+        </nav>
+      </header>
+
+      <main class="content-area">
+        <div id="pdf-visor-content" class="content-panel" style="height: 100vh">
+          <div class="cabecera-unitats" style="flex-wrap: wrap">
+            <h2 id="pdf-titol">TEMARI</h2>
+
+            <div
+              id="pdf-nav-buttons"
+              style="
+                display: none;
+                gap: 10px;
+                margin-left: auto;
+                margin-right: 15px;
+              "
+            >
+              <button
+                id="btn-pdf-ant"
+                class="btn-nav-control"
+                style="padding: 8px 15px"
+                onclick="navegarPdf(-1)"
+              >
+                Anterior
+              </button>
+              <button
+                id="btn-pdf-seg"
+                class="btn-nav-control"
+                style="padding: 8px 15px"
+                onclick="navegarPdf(1)"
+              >
+                Següent
+              </button>
+            </div>
+            <button
+              class="btn-sortir"
+              style="background-color: #44718d"
+              onclick="cerrarTest(false)"
+            >
+              TORNAR AL MENÚ
+            </button>
+          </div>
+          <iframe
+            id="iframe-pdf"
+            src=""
+            width="100%"
+            height="80%"
+            style="border: none; border-radius: 8px"
+          ></iframe>
+        </div>
+
+        <div
+          id="test-content"
+          class="content-panel"
+          aria-hidden="true"
+          style="min-height: 800px"
+        >
+          <div
+            class="test-header-top"
+            style="
+              flex-direction: column;
+              align-items: stretch;
+              background: transparent;
+              padding: 0;
+              margin-top: -16px;
+              margin-bottom: 5px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #a9c2d4;
+              "
+            >
+              <span
+                id="test-mode-label"
+                style="
+                  font-weight: 900;
+                  color: #26404f;
+                  font-size: 16px;
+                  letter-spacing: 1px;
+                  text-transform: uppercase;
+                "
+                >ESTUDI</span
+              >
+              <div style="display: flex; gap: 15px; align-items: center">
+                <span
+                  id="test-cronometro"
+                  style="
+                    font-weight: bold;
+                    font-size: 16px;
+                    color: #c70a0a;
+                    display: none;
+                  "
+                  >70s</span
+                >
+                <button
+                  class="btn-sortir btn-sortir-rodo"
+                  onclick="confirmarSortir()"
+                >
+                  ↩
+                </button>
+              </div>
+            </div>
+            <div
+              style="
+                background-color: transparent;
+                padding: 5px 10px;
+                margin-bottom: 0;
+              "
+            >
+              <span
+                id="test-info-bloque"
+                style="font-weight: bold; color: #5a7b93; font-size: 14px"
+                >BLOC / UNITAT</span
+              >
+            </div>
+          </div>
+
+          <div id="classic-test-ui">
+            <div class="mapa-preguntas-container" id="mapa-preguntas"></div>
+
+            <div
+              class="seccion-interna"
+              style="display: flex; flex-direction: column; gap: 1px"
+            >
+              <div
+                style="
+                  display: flex;
+                  gap: 8px;
+                  align-items: flex-start;
+                  padding: 10px 5px;
+                  background: transparent;
+                "
+              >
+                <span
+                  id="test-numero"
+                  style="
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #000000;
+                    line-height: 1.5;
+                  "
+                  >1.</span
+                >
+                <div
+                  id="test-enunciado"
+                  style="
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #000000;
+                    background: transparent;
+                    border: none;
+                    line-height: 1.5;
+                    letter-spacing: 0.5px;
+                  "
+                >
+                  Enunciat de la pregunta...
+                </div>
+              </div>
+
+              <div
+                id="test-opciones-container"
+                style="display: flex; flex-direction: column; gap: 21px"
+              ></div>
+
+              <div
+                id="msg-blanc-estudi"
+                style="
+                  color: #9b1c1c;
+                  font-weight: bold;
+                  text-align: center;
+                  display: none;
+                  font-size: 14px;
+                  background: #fde8e8;
+                  padding: 12px;
+                  border-radius: 6px;
+                  border: 2px solid #f8b4b4;
+                "
+              ></div>
+
+              <div class="test-footer-nav" style="display: flex; gap: 10px">
+                <button
+                  id="btn-anterior"
+                  class="btn-nav-control"
+                  style="flex: 1"
+                  onclick="navegarPregunta(-1)"
+                >
+                  Anterior
+                </button>
+                <button
+                  id="btn-entregar-sempre"
+                  class="btn-nav-control"
+                  style="flex: 1; background-color: #c70a0a"
+                  onclick="intentarEntregarSempre()"
+                >
+                  Entregar Test
+                </button>
+                <button
+                  id="btn-siguiente-entregar"
+                  class="btn-nav-control"
+                  style="flex: 1"
+                  onclick="navegarPregunta(1)"
+                >
+                  Següent
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="repaso-end-screen"
+              style="
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 40px 20px;
+                background-color: #def7ec;
+                border-radius: 12px;
+                border: 4px solid #03543f;
+                margin-top: 20px;
+              "
+            >
+              <h3
+                style="
+                  color: #03543f;
+                  font-size: 24px;
+                  margin-bottom: 15px;
+                  margin-top: 0;
+                "
+              >
+                ENHORABONA! 🎉
+              </h3>
+              <p
+                style="
+                  color: #03543f;
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                  font-size: 16px;
+                "
+              >
+                Has afiançat tots els coneixements i la llista està a zero.
+              </p>
+              <p style="color: #03543f; margin-bottom: 30px; font-size: 14px">
+                Ja pots fer nous tests amb normalitat.
+              </p>
+              <button
+                class="btn-sortir"
+                style="
+                  background-color: #03543f;
+                  padding: 15px;
+                  width: 100%;
+                  max-width: 300px;
+                  font-size: 15px;
+                  border-radius: 8px;
+                  border: 2px solid #000000;
+                  transition: transform 0.2s;
+                "
+                onclick="cerrarTest(false)"
+              >
+                SORTIR AL MENÚ PRINCIPAL
+              </button>
+            </div>
+          </div>
+
+          <div id="flashcard-ui" style="display: none">
+            <div class="flashcard-dashboard" id="flashcard-dashboard">
+              <div class="flashcard-stat">
+                <span class="flashcard-stat-value" id="fc-stat-totales">0</span>
+                <span class="flashcard-stat-label">Totals</span>
+              </div>
+              <div class="flashcard-stat">
+                <span
+                  class="flashcard-stat-value"
+                  id="fc-stat-sabudes"
+                  style="color: #84e1bc"
+                  >0</span
+                >
+                <span class="flashcard-stat-label">Aprenentatges</span>
+              </div>
+              <div class="flashcard-stat">
+                <span
+                  class="flashcard-stat-value"
+                  id="fc-stat-pendents"
+                  style="color: #f8b4b4"
+                  >0</span
+                >
+                <span class="flashcard-stat-label">Pendents</span>
+              </div>
+            </div>
+
+            <div class="flashcard-wrapper" id="flashcard-wrapper">
+              <div class="flashcard-end-screen" id="fc-end-screen">
+                <h3
+                  style="color: #073e87; font-size: 24px; margin-bottom: 15px"
+                >
+                  MAÇ ACABAT! MOLT BÉ! 🎉
+                </h3>
+                <p
+                  style="
+                    color: #333333;
+                    font-weight: bold;
+                    margin-bottom: 30px;
+                    font-size: 15px;
+                  "
+                >
+                  Has repassat totes les targetes de la llista.
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                    width: 100%;
+                  "
+                >
+                  <button
+                    class="btn-nav-control"
+                    style="background-color: #2f62d0; padding: 15px"
+                    onclick="iniciarTest()"
+                  >
+                    REPETIR MAÇ
+                  </button>
+                  <button
+                    class="btn-sortir"
+                    style="background-color: #c70a0a; padding: 15px"
+                    onclick="cerrarTest(false)"
+                  >
+                    SORTIR AL MENÚ PRINCIPAL
+                  </button>
+                </div>
+              </div>
+
+              <div class="flashcard" id="fc-card">
+                <div class="flashcard-header">
+                  <span class="flashcard-tag tag-nova" id="fc-tag">NOVA</span>
+                  <span class="flashcard-counter" id="fc-counter">1 / 20</span>
+                </div>
+
+                <div class="flashcard-pregunta" id="fc-pregunta">
+                  Cargando pregunta...
+                </div>
+                <div class="flashcard-divider"></div>
+                <div class="flashcard-respuesta" id="fc-respuesta">
+                  Cargando respuesta...
+                </div>
+
+                <div class="flashcard-botones">
+                  <button
+                    class="btn-flash btn-flash-repetir"
+                    id="btn-fc-repetir"
+                    disabled
+                  >
+                    REPETIR
+                  </button>
+                  <button
+                    class="btn-flash btn-flash-mostrar"
+                    id="btn-fc-mostrar"
+                  >
+                    MOSTRAR
+                  </button>
+                  <button
+                    class="btn-flash btn-flash-correcta"
+                    id="btn-fc-correcta"
+                    disabled
+                  >
+                    CORRECTA
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="modal-sortir">
+          <div class="modal-box">
+            <h3>Vols sortir?</h3>
+            <div class="modal-buttons">
+              <button class="btn-sortir" onclick="cerrarTest(true)">SÍ</button>
+              <button class="btn-nav-control" onclick="cerrarModalSortir()">
+                NO
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="modal-entregar"
+          style="
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <div class="modal-box">
+            <h3>Vols entregar el test?</h3>
+            <p style="font-size: 13px; color: #cfdee8">
+              Un cop entregat, es mostraran els resultats finals.
+            </p>
+            <div class="modal-buttons">
+              <button
+                class="btn-sortir"
+                style="background-color: #337054"
+                onclick="ejecutarEntregaTest()"
+              >
+                SÍ
+              </button>
+              <button class="btn-nav-control" onclick="cerrarModalEntregar()">
+                NO
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="resultats-content" class="content-panel" aria-hidden="true">
+          <div
+            class="cabecera-unitats"
+            style="
+              border-bottom-color: #000000;
+              text-align: center;
+              justify-content: center;
+            "
+          >
+            <h2
+              id="nota-titol"
+              style="margin: 0; font-size: 35px; color: #073e87"
+            >
+              RESULTATS
+            </h2>
+          </div>
+
+          <div class="seccion-interna">
+            <div
+              id="nota-detalls"
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 25px;
+              "
+            ></div>
+
+            <h3
+              style="
+                color: #073e87;
+                margin-bottom: 15px;
+                font-size: 16px;
+                border-bottom: 2px solid #073e87;
+                padding-bottom: 5px;
+              "
+            >
+              REVISIÓ DE PREGUNTES
+            </h3>
+
+            <div
+              id="llista-resultats"
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                max-height: 400px;
+                overflow-y: auto;
+                padding-right: 5px;
+              "
+            ></div>
+
+            <button
+              class="btn-sortir"
+              style="
+                background-color: #2f62d0;
+                width: 100%;
+                padding: 18px;
+                font-size: 16px;
+                margin-top: 20px;
+                border: 3px solid #000000;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+              "
+              onclick="cerrarTest(false)"
+            >
+              SORTIR AL MENÚ PRINCIPAL
+            </button>
+          </div>
+        </div>
+        <div id="examens-content" class="content-panel" aria-hidden="true">
+          <div class="cabecera-unitats">
+            <h2>EXÀMENS D'ANYS ANTERIORS</h2>
+          </div>
+          <div class="seccion-interna">
+            <div style="display: flex; gap: 12px; margin-bottom: 15px">
+              <button class="btn-examen" id="btn-tots-anys" style="flex: 1">
+                TOTS
+              </button>
+              <button class="btn-examen any-item" style="flex: 1">
+                <span class="text-any">ACTUALITAT 2026</span>
+                <span class="badge-targetes" id="badge-ACTUALITAT 2026"></span>
+              </button>
+            </div>
+
+            <div
+              class="grid-examens"
+              id="grid-anys"
+              style="grid-template-columns: repeat(3, 1fr)"
+            >
+              <button class="btn-examen any-item">
+                <span class="text-any">46/17</span>
+                <span class="badge-targetes" id="badge-46/17"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/19</span>
+                <span class="badge-targetes" id="badge-46/19"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/002/19</span>
+                <span class="badge-targetes" id="badge-46/002/19"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/21</span>
+                <span class="badge-targetes" id="badge-46/21"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/22</span>
+                <span class="badge-targetes" id="badge-46/22"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/23</span>
+                <span class="badge-targetes" id="badge-46/23"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/002/23</span>
+                <span class="badge-targetes" id="badge-46/002/23"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/24</span>
+                <span class="badge-targetes" id="badge-46/24"></span>
+              </button>
+              <button class="btn-examen any-item">
+                <span class="text-any">46/25</span>
+                <span class="badge-targetes" id="badge-46/25"></span>
+              </button>
+            </div>
+
+            <div
+              id="models-container-examens"
+              class="seccion-interna"
+              style="display: none; margin-top: 20px"
+            >
+              <h3>MODELS</h3>
+              <div class="botones-dinamica" id="botones-models-dinamics">
+                <button class="btn-simple">Model 01</button>
+                <button class="btn-simple">Model 02</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="idees-content" class="content-panel" aria-hidden="true">
+          <div class="cabecera-unitats">
+            <h2>IDEES DE FORÇA</h2>
+          </div>
+          <div class="seccion-interna">
+            <div class="fila-idees">
+              <div class="cabecera-fila">
+                <span class="titulo-letra">A</span>
+              </div>
+              <div class="bolas-container">
+                <button class="btn-redonda bola-a">
+                  A1<span class="badge-targetes" id="badge-idea-a1"></span>
+                </button>
+                <button class="btn-redonda bola-a">
+                  A2<span class="badge-targetes" id="badge-idea-a2"></span>
+                </button>
+                <button class="btn-redonda bola-a">
+                  A3<span class="badge-targetes" id="badge-idea-a3"></span>
+                </button>
+                <button class="btn-redonda bola-a">
+                  A4<span class="badge-targetes" id="badge-idea-a4"></span>
+                </button>
+                <button class="btn-redonda bola-a">
+                  A5<span class="badge-targetes" id="badge-idea-a5"></span>
+                </button>
+                <button class="btn-redonda bola-a">
+                  A6<span class="badge-targetes" id="badge-idea-a6"></span>
+                </button>
+                <button class="btn-redonda bola-a">
+                  A7<span class="badge-targetes" id="badge-idea-a7"></span>
+                </button>
+              </div>
+              <div class="tots-checkbox">
+                <input type="checkbox" id="check-tots-idees-a" />
+                <label for="check-tots-idees-a">TOTS</label>
+              </div>
+            </div>
+
+            <div class="fila-idees">
+              <div class="cabecera-fila">
+                <span class="titulo-letra">B</span>
+              </div>
+              <div class="bolas-container">
+                <button class="btn-redonda bola-b">
+                  B1<span class="badge-targetes" id="badge-idea-b1"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B2<span class="badge-targetes" id="badge-idea-b2"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B3<span class="badge-targetes" id="badge-idea-b3"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B4<span class="badge-targetes" id="badge-idea-b4"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B5<span class="badge-targetes" id="badge-idea-b5"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B6<span class="badge-targetes" id="badge-idea-b6"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B7<span class="badge-targetes" id="badge-idea-b7"></span>
+                </button>
+                <button class="btn-redonda bola-b">
+                  B8<span class="badge-targetes" id="badge-idea-b8"></span>
+                </button>
+              </div>
+              <div class="tots-checkbox">
+                <input type="checkbox" id="check-tots-idees-b" />
+                <label for="check-tots-idees-b">TOTS</label>
+              </div>
+            </div>
+
+            <div class="fila-idees">
+              <div class="cabecera-fila">
+                <span class="titulo-letra">C</span>
+              </div>
+              <div class="bolas-container">
+                <button class="btn-redonda bola-c">
+                  C1<span class="badge-targetes" id="badge-idea-c1"></span>
+                </button>
+                <button class="btn-redonda bola-c">
+                  C2<span class="badge-targetes" id="badge-idea-c2"></span>
+                </button>
+                <button class="btn-redonda bola-c">
+                  C3<span class="badge-targetes" id="badge-idea-c3"></span>
+                </button>
+                <button class="btn-redonda bola-c">
+                  C4<span class="badge-targetes" id="badge-idea-c4"></span>
+                </button>
+                <button class="btn-redonda bola-c">
+                  C5<span class="badge-targetes" id="badge-idea-c5"></span>
+                </button>
+              </div>
+              <div class="tots-checkbox">
+                <input type="checkbox" id="check-tots-idees-c" />
+                <label for="check-tots-idees-c">TOTS</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="bloc-a-content" class="content-panel" aria-hidden="true">
+          <div class="seccion-interna">
+            <div class="cabecera-unitats">
+              <h2>BLOC A</h2>
+              <div class="tots-checkbox">
+                <input type="checkbox" id="check-tots-a" />
+                <label for="check-tots-a">TOTS</label>
+              </div>
+            </div>
+            <div class="lista-unitats" id="unitats-a">
+              <label
+                ><input type="checkbox" class="unitat-item" value="a1" />A1.
+                Història de Catalunya (part I)<span
+                  class="badge-targetes"
+                  id="badge-a1"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="a2" />A2.
+                Història de Catalunya (part II)<span
+                  class="badge-targetes"
+                  id="badge-a2"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="a3" />A3.
+                Història de la policia a Catalunya<span
+                  class="badge-targetes"
+                  id="badge-a3"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="a4" />A4.
+                Àmbit sociolingüístic<span
+                  class="badge-targetes"
+                  id="badge-a4"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="a5" />A5.
+                Marc geogràfic de Catalunya<span
+                  class="badge-targetes"
+                  id="badge-a5"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="a6" />A6.
+                Entorn social a Catalunya<span
+                  class="badge-targetes"
+                  id="badge-a6"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="a7" />A7. Les
+                tecnologies de la informació en el segle xxi<span
+                  class="badge-targetes"
+                  id="badge-a7"
+                ></span
+              ></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="bloc-b-content" class="content-panel" aria-hidden="true">
+          <div class="seccion-interna">
+            <div class="cabecera-unitats">
+              <h2>BLOC B</h2>
+              <div class="tots-checkbox">
+                <input type="checkbox" id="check-tots-b" />
+                <label for="check-tots-b">TOTS</label>
+              </div>
+            </div>
+            <div class="lista-unitats" id="unitats-b">
+              <label
+                ><input type="checkbox" class="unitat-item" value="b1" />B1.
+                L’Estatut d’autonomia de Catalunya (EAC)<span
+                  class="badge-targetes"
+                  id="badge-b1"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b2" />B2. Les
+                institucions polítiques de Catalunya<span
+                  class="badge-targetes"
+                  id="badge-b2"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b3" />B3.
+                L’ordenament jurídic de l’Estat<span
+                  class="badge-targetes"
+                  id="badge-b3"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b4" />B4. Els
+                drets humans i els drets constitucionals<span
+                  class="badge-targetes"
+                  id="badge-b4"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b5" />B5. Les
+                institucions polítiques de l’Estat<span
+                  class="badge-targetes"
+                  id="badge-b5"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b6" />B6. Els
+                òrgans jurisdiccionals<span
+                  class="badge-targetes"
+                  id="badge-b6"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b7" />B7.
+                L’organització territorial de l’Estat<span
+                  class="badge-targetes"
+                  id="badge-b7"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="b8" />B8. La
+                Unió Europea<span class="badge-targetes" id="badge-b8"></span
+              ></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="bloc-c-content" class="content-panel" aria-hidden="true">
+          <div class="seccion-interna">
+            <div class="cabecera-unitats">
+              <h2>BLOC C</h2>
+              <div class="tots-checkbox">
+                <input type="checkbox" id="check-tots-c" />
+                <label for="check-tots-c">TOTS</label>
+              </div>
+            </div>
+            <div class="lista-unitats" id="unitats-c">
+              <label
+                ><input type="checkbox" class="unitat-item" value="c1" />C1. Les
+                competències de la Generalitat en matèria de seguretat<span
+                  class="badge-targetes"
+                  id="badge-c1"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="c2" />C2. El
+                Departament d’Interior i Seguretat Pública<span
+                  class="badge-targetes"
+                  id="badge-c2"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="c3" />C3. La
+                coordinació policial<span
+                  class="badge-targetes"
+                  id="badge-c3"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="c4" />C4. El
+                marc legal de la seguretat<span
+                  class="badge-targetes"
+                  id="badge-c4"
+                ></span
+              ></label>
+              <label
+                ><input type="checkbox" class="unitat-item" value="c5" />C5. El
+                Codi deontològic policial<span
+                  class="badge-targetes"
+                  id="badge-c5"
+                ></span
+              ></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="simulacre-content" class="content-panel" aria-hidden="true">
+          <div class="cabecera-unitats">
+            <h2>SIMULACRE</h2>
+          </div>
+          <div class="seccion-interna">
+            <div class="grid-simulacre">
+              <button class="btn-simulacre item-simulacre simulacre-bloc-a">
+                BLOC A
+              </button>
+              <button class="btn-simulacre item-simulacre simulacre-bloc-b">
+                BLOC B
+              </button>
+              <button class="btn-simulacre item-simulacre simulacre-bloc-c">
+                BLOC C
+              </button>
+              <button class="btn-simulacre item-simulacre simulacre-examens">
+                EXAMENS ANTERIORS
+              </button>
+              <button
+                class="btn-simulacre btn-simulacre-global"
+                id="btn-simulacre-global"
+                onclick="seleccionarSimulacreGlobal()"
+              >
+                SIMULACRE
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="estadistiques-content"
+          class="content-panel"
+          aria-hidden="true"
+        >
+          <div class="cabecera-unitats">
+            <h2>ESTADÍSTIQUES I PROGRÉS</h2>
+          </div>
+
+          <div class="stats-nav-buttons">
+            <button
+              id="btn-resum-global"
+              class="btn-stats-nav active"
+              onclick="cambiarVistaEstadisticas('global')"
+            >
+              Resum Global
+            </button>
+            <button
+              id="btn-resum-especific"
+              class="btn-stats-nav"
+              onclick="cambiarVistaEstadisticas('especific')"
+            >
+              Resum Específic
+            </button>
+          </div>
+
+          <div id="view-resum-global" class="stats-sub-view active">
+            <div class="stats-grid-container">
+              <div class="stat-card">
+                <div
+                  class="stat-chart-wrapper"
+                  style="background: conic-gradient(#e0e0e0 0deg 360deg)"
+                >
+                  <div class="stat-chart-inner">
+                    <span>0%</span>
+                    <span style="font-size: 9px; font-weight: normal"
+                      >Aprovats</span
+                    >
+                  </div>
+                </div>
+                <div class="stat-info-list">
+                  <h4>Percentatge de Nota Mitjana Global</h4>
+                  <div class="stat-list-item">
+                    <span>Tests aprovats / fets - Bloc A</span>
+                    <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Tests aprovats / fets - Bloc B</span>
+                    <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Tests aprovats / fets - Bloc C</span>
+                    <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Tests aprovats / fets - Idees Força</span>
+                    <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Tests aprovats / fets - Exàmens Anteriors</span>
+                    <span>0 / 0</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div
+                  class="stat-chart-wrapper"
+                  style="background: conic-gradient(#e0e0e0 0deg 360deg)"
+                >
+                  <div class="stat-chart-inner">
+                    <span>0%</span>
+                    <span style="font-size: 9px; font-weight: normal"
+                      >Completat</span
+                    >
+                  </div>
+                </div>
+                <div class="stat-info-list">
+                  <h4>Test Realitzats vs Faltants</h4>
+                  <div class="stat-list-item">
+                    <span>Preguntes Totals - Bloc A</span> <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Preguntes Totals - Bloc B</span> <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Preguntes Totals - Bloc C</span> <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Preguntes Totals - Idees Força</span>
+                    <span>0 / 0</span>
+                  </div>
+                  <div class="stat-list-item">
+                    <span>Preguntes Totals - Exàmens Anteriors</span>
+                    <span>0 / 0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="view-resum-especific" class="stats-sub-view">
+            <div class="especific-nav-tabs">
+              <button
+                class="btn-especific-tab active"
+                onclick="cambiarTabEspecific('bloc-a', this)"
+              >
+                Bloc A
+              </button>
+              <button
+                class="btn-especific-tab"
+                onclick="cambiarTabEspecific('bloc-b', this)"
+              >
+                Bloc B
+              </button>
+              <button
+                class="btn-especific-tab"
+                onclick="cambiarTabEspecific('bloc-c', this)"
+              >
+                Bloc C
+              </button>
+              <button
+                class="btn-especific-tab"
+                onclick="cambiarTabEspecific('idees', this)"
+              >
+                Idees Força
+              </button>
+              <button
+                class="btn-especific-tab"
+                onclick="cambiarTabEspecific('examens', this)"
+              >
+                Exàmens Anteriors
+              </button>
+            </div>
+
+            <div id="especific-bloc-a" class="especific-content-box active">
+              <div class="especific-bloc-header">
+                <div class="bloc-header-chart">
+                  <div class="bloc-header-chart-inner">0%</div>
+                </div>
+                <div class="bloc-header-info">
+                  <span class="bloc-header-title"
+                    >Estat Bloc A: 🔴 En Risc (Zona Crítica)</span
+                  >
+                  <span class="bloc-header-details"
+                    >Cobertura: 0% | Aciertos Mitjans: 0%</span
+                  >
+                </div>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A1. Història de Catalunya (part I)</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A2. Història de Catalunya (part II)</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A3. Història de la policia a Catalunya</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A4. Àmbit sociolingüístic</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A5. Marc geogràfic de Catalunya</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A6. Entorn social a Catalunya</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A7. Les tecnologies de la informació</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+            </div>
+
+            <div id="especific-bloc-b" class="especific-content-box">
+              <div class="especific-bloc-header">
+                <div class="bloc-header-chart">
+                  <div class="bloc-header-chart-inner">0%</div>
+                </div>
+                <div class="bloc-header-info">
+                  <span class="bloc-header-title"
+                    >Estat Bloc B: 🔴 En Risc (Zona Crítica)</span
+                  >
+                  <span class="bloc-header-details"
+                    >Cobertura: 0% | Aciertos Mitjans: 0%</span
+                  >
+                </div>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B1. L’Estatut d’autonomia de Catalunya</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B2. Les institucions polítiques</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B3. L’ordenament jurídic de l’Estat</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B4. Els drets humans i constitucionals</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B5. Les institucions polítiques de l’Estat</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B6. Els òrgans jurisdiccionals</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B7. L’organització territorial</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B8. La Unió Europea</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+            </div>
+
+            <div id="especific-bloc-c" class="especific-content-box">
+              <div class="especific-bloc-header">
+                <div class="bloc-header-chart">
+                  <div class="bloc-header-chart-inner">0%</div>
+                </div>
+                <div class="bloc-header-info">
+                  <span class="bloc-header-title"
+                    >Estat Bloc C: 🔴 En Risc (Zona Crítica)</span
+                  >
+                  <span class="bloc-header-details"
+                    >Cobertura: 0% | Aciertos Mitjans: 0%</span
+                  >
+                </div>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C1. Competències de la Generalitat</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C2. Departament d’Interior</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C3. La coordinació policial</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C4. El marc legal de la seguretat</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-list-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C5. El Codi deontològic policial</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+            </div>
+
+            <div id="especific-idees" class="especific-content-box">
+              <div class="especific-bloc-header">
+                <div class="bloc-header-chart">
+                  <div class="bloc-header-chart-inner">0%</div>
+                </div>
+                <div class="bloc-header-info">
+                  <span class="bloc-header-title"
+                    >Estat Idees Força: 🔴 En Risc (Zona Crítica)</span
+                  >
+                  <span class="bloc-header-details"
+                    >Cobertura: 0% | Aciertos Mitjans: 0%</span
+                  >
+                </div>
+              </div>
+
+              <div class="especific-group-title">IDEES FORÇA - BLOC A</div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A1</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A2</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A3</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A4</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A5</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A6</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>A7</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">IDEES FORÇA - BLOC B</div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B1</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B2</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B3</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B4</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>B5</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">IDEES FORÇA - BLOC C</div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C1</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C2</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="50"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>C3</span>
+                <span>Totals: 50 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+            </div>
+
+            <div id="especific-examens" class="especific-content-box">
+              <div class="especific-bloc-header">
+                <div class="bloc-header-chart">
+                  <div class="bloc-header-chart-inner">0%</div>
+                </div>
+                <div class="bloc-header-info">
+                  <span class="bloc-header-title"
+                    >Estat Exàmens Anteriors: 🔴 En Risc (Zona Crítica)</span
+                  >
+                  <span class="bloc-header-details"
+                    >Cobertura: 0% | Aciertos Mitjans: 0%</span
+                  >
+                </div>
+              </div>
+
+              <div class="especific-group-title">ACTUALITAT 2026</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Actualitat</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/17</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/19</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/002/19</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 02</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/21</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/22</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 02</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/23</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 02</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/002/23</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 02</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/24</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 02</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+
+              <div class="especific-group-title">46/25</div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 01</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+              <div
+                class="especific-sub-row"
+                data-totals="100"
+                data-realitzades="0"
+                data-aciertos="0"
+              >
+                <span>Model 02</span>
+                <span>Totals: 100 | Realitzades: 0 | Aciertos: 0%</span>
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 35px;
+              padding: 15px;
+              background: #26404f;
+              border: 3px solid #000000;
+              border-radius: 8px;
+              text-align: center;
+              color: white;
+            "
+          >
+            <h3 style="color: #cfdee8; margin-top: 0; margin-bottom: 15px">
+              Sincronització Manual (Còpia de Seguretat)
+            </h3>
+            <div style="display: flex; gap: 15px; justify-content: center">
+              <a
+                id="btn-descarregar"
+                class="btn-nav-control"
+                style="
+                  background-color: #337054;
+                  text-decoration: none;
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+                onclick="exportarDades()"
+                >📥 Descarregar Progrés</a
+              >
+              <button
+                class="btn-nav-control"
+                style="background-color: #d09400"
+                onclick="document.getElementById('file-import').click()"
+              >
+                📤 Pujar Progrés
+              </button>
+              <input
+                type="file"
+                id="file-import"
+                style="display: none"
+                accept=".json"
+                onchange="importarDades(event)"
+              />
+            </div>
+            <p
+              style="
+                font-size: 12px;
+                margin-bottom: 0;
+                margin-top: 15px;
+                color: #a9c2d4;
+              "
+            >
+              Fes servir aquests botons per passar el teu progrés entre el PC i
+              el mòbil.
+            </p>
+            <div
+              id="sync-msg"
+              style="
+                display: none;
+                font-weight: bold;
+                margin-top: 15px;
+                padding: 10px;
+                border-radius: 6px;
+                font-size: 14px;
+              "
+            ></div>
+          </div>
+        </div>
+      </main>
+
+      <div class="bottom-action-bar" id="footer-actions">
+        <div class="footer-row-top">
+          <div class="footer-col">
+            <span class="small-label">TRIA LA DINÀMICA</span>
+            <select
+              id="tipo-dinamica"
+              class="select-global control-igual"
+              style="background-color: #cc0000"
+              onchange="
+                this.style.backgroundColor =
+                  this.value === 'BB'
+                    ? '#2F62D0'
+                    : this.value === 'TT'
+                      ? '#d09400'
+                      : this.value === 'PDF'
+                        ? '#FF8000'
+                        : '#cc0000';
+                cambiarInterfazDinamica();
+              "
+            >
+              <option value="XX" selected>MODE ESTUDI</option>
+              <option value="BB">SIMULACRE</option>
+              <option value="TT">TARGETES</option>
+              <option value="PDF">LLEGIR TEMARI</option>
+            </select>
+          </div>
+
+          <div class="footer-col" id="col-num-preguntas">
+            <span class="small-label">TRIA EL Nº DE PREGUNTES</span>
+            <select id="num-preguntas" class="select-global control-igual">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="30" selected>30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="totes">Totes les disponibles</option>
+            </select>
+          </div>
+
+          <div class="footer-col" id="col-tarjetas-modo" style="display: none">
+            <span class="small-label">MODO TARJETAS</span>
+            <select id="modo-tarjetas" class="select-global control-igual">
+              <option value="totes">Totes</option>
+              <option value="noves">Noves (Per aprendre)</option>
+              <option value="repasar">A Repasar (Errades)</option>
+              <option value="sabudes">Superades (Graduades)</option>
+            </select>
+          </div>
+          <div class="footer-col" id="col-tarjetas-orden" style="display: none">
+            <span class="small-label">ORDEN</span>
+            <select id="orden-tarjetas" class="select-global control-igual">
+              <option value="secuencial">Secuencial</option>
+              <option value="aleatorio">Aleatori</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          class="footer-row-bottom"
+          style="flex-direction: column; align-items: center"
+        >
+          <p
+            id="error-msg"
+            style="
+              color: #ff4d4d;
+              font-weight: bold;
+              display: none;
+              margin-bottom: 15px;
+              margin-top: 0;
+              text-transform: uppercase;
+              text-align: center;
+            "
+          ></p>
+          <button class="btn-comenzar" onclick="iniciarTest()">COMENÇAR</button>
+          <div
+            id="contenedor-errores-footer"
+            style="
+              display: none;
+              margin-top: 15px;
+              width: 100%;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <button
+              id="btn-repasar-errores"
+              class="btn-text-repaso"
+              onclick="iniciarRepasoErrores()"
+            >
+              ⚠️ Tens errors pendents de repassar (<span id="num-errores-badge"
+                >0</span
+              >)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="preguntas.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
