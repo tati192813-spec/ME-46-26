@@ -183,7 +183,7 @@ function iniciarTest() {
         const nomArxiu =
           rutesTemari[idUnitat] || `${idUnitat.toUpperCase()}.pdf`;
         window.llistaPdfs.push({
-          ruta: `TEMARI/BLOC ${lletraBloc}/${nomArxiu}`,
+          ruta: nomArxiu,
           titol: `TEMARI - Unitat ${idUnitat.toUpperCase()}`,
         });
       });
@@ -228,7 +228,7 @@ function iniciarTest() {
         const lletraBloc = idIdea.charAt(0).toUpperCase();
         const nomArxiu = rutesIdees[idIdea] || `${idIdea.toUpperCase()}.IF.pdf`;
         window.llistaPdfs.push({
-          ruta: `TEMARI/IF_${lletraBloc}/${nomArxiu}`,
+          ruta: nomArxiu,
           titol: `IDEES FORÇA - Tema ${idIdea.toUpperCase()}`,
         });
       });
